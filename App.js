@@ -1,50 +1,132 @@
 import React, { Component } from 'react'
-import { AppRegistry, View, ScrollView, ListView, StyleSheet, Text, TouchableHighlight } from 'react-native'
+import { AsyncStorage, AppRegistry, TextInput, View, ScrollView, ListView, StyleSheet, Text, TouchableHighlight, Button } from 'react-native'
+import { StackNavigator } from "react-navigation"
+//import { writeFile, readFile } from 'react-native-fs';
 
-export default class CategoriesList extends React.Component {
+// import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
+
+// // iPhone/Android
+// DocumentPicker.show({
+//       filetype: [DocumentPickerUtil.images()],
+//     },(error,res) => {
+//       // Android
+//       console.log(
+//          res.uri,
+//          res.type, // mime type
+//          res.fileName,
+//          res.fileSize
+//       );
+//     });
+// /* read a workbook */
+
+// readFile(file, 'ascii').then((res) => {
+//   const workbook = XLSX.read(res, {type:'binary'});
+//   /* DO SOMETHING WITH workbook HERE */
+// });
+
+class Login extends React.Component {
+  constructor(props) {
+    super(props);
+    //   this.state = {
+    //     name: "",
+    //     surname: ""
+    //   }
+  }
 
   render() {
-    const text = "sdfsaf"
-    const categories = ["qwer11", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv",
-      "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv",
-      "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv",
-      "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv",
-      "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv22",
-      "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv22",]
-      const categoriesCopmponents=(categories.map((val) => <CategoryButton Name={val} />));
     return (
-      <ScrollView style={styles.FlexStyle}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={styles.card}>
+          <Text style={styles.title} >Пожалуйста представьтесь:</Text>
+        </View>
+        <View style={styles.card}>
+          <TextInput style={styles.input} placeholder="Имя" autoCorrect={false}
+            onChangeText={(value) => this.setState({ name: value })} />
+        </View>
+        <View style={styles.card}>
+          <TextInput style={styles.input} placeholder="Фамилия" autoCorrect={false}
+            onChangeText={(value) => this.setState({ surname: value })} />
+        </View>
+        <View style={styles.card}>
+          <TextInput style={styles.input}
+            placeholder="№ группы, если ты каист"
+            autoCorrect={false}
+            onChangeText={(value) => this.setState({ group: value })} />
+        </View>
+        <View style={styles.card}>
+          <Button title="Вход" onPress={this._signInAsync} />
+        </View>
+      </View>
+    );
+  }
+
+  _signInAsync = async () => {
+    await AsyncStorage.setItem('name', this.state.name);
+    await AsyncStorage.setItem("surname", this.state.surname)
+    await AsyncStorage.setItem("group", this.state.group)
+    console.log(this.state.name)
+    this.props.navigation.navigate('_CategoriesList');
+  };
+}
+
+
+class CategoriesList extends React.Component {
+  componentWillMount() {
+    this.setState({ categories: ["Загрузка..."] })
+
+    const pattern = "hello"//"^a.{4}$";
+    fetch("https://dictionary.skyeng.ru/api/public/v1/words/search?search=" + pattern, {
+      method: "get",
+    })
+      .then((r) => r.json())
+      .then((json) => {
+        console.log(json)
+        let g = json.map((q,id) => { return {"title":q.text,"id":id}});
+        this.setState({ categories: g })
+      })
+      .catch((error) => {
+        console.error(error);
+        AsyncStorage.getItem("name")
+          .then((value) => {
+            const categories = ["hello", "qwer11", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv22", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv22",]
+            categories.push(value)
+            this.setState({ categories: categories })
+          })
+      })
+  }
+
+  render() {
+    const categoriesCopmponents =
+      (this.state.categories.map((val) => <CategoryButton Name={val} />));
+    return (
+      <ScrollView style={styles.FlexStyle} >
         {categoriesCopmponents}
-
-        <View>
-          <Text style={styles.ColorRed}>
-            hihihihihi
-          </Text>
-          <Text style={styles.ColorRed}>
-            hi2hi2hi2hi2hi2
-          </Text>
-        </View>
-        <View>
+        <TouchableHighlight onPress={this._loadMoreCategories}>
           <Text>
-            hohohohoho
-            </Text>
-        </View>
-
+            Загрузить {this.state.categories.length > 1 ? "еще" : "категории"}
+          </Text>
+        </TouchableHighlight>
       </ScrollView>
-
     )
+  }
+
+  _loadMoreCategories() {
   }
 }
 
 class CategoryButton extends React.Component {
   render() {
     return (
-      <TouchableHighlight /*onPress={this.props.onForward}*/  >
+      <TouchableHighlight onPress={this._goToCategory}>
         <Text>
           {this.props.Name}
         </Text>
       </TouchableHighlight>
     )
+  }
+  _goToCategory() {
+    alert("Скоро будет тут что то новое :)")
+    //alert("И да, вы нажали на элемент с id="+this.props.id)
   }
 }
 
@@ -54,7 +136,41 @@ const styles = StyleSheet.create({
   },
   ColorRed: {
     backgroundColor: 'red'
-  }
+  },
+
+  input: {
+    height: 40,
+    minWidth: 200,
+    //width:300,
+    color: '#9197A3',
+    backgroundColor: '#FAFAFA',
+    borderColor: '#D8D8D8',
+    borderRadius: 4,
+    borderWidth: 1,
+    paddingHorizontal: 10,
+  },
+  title: {
+    fontSize: 30,//40
+    textAlign: 'center',
+  },
+  card: {
+    flex: 0,
+    marginVertical: 10
+  },
 })
 
+export default StackNavigator({
+  _CategoriesList: {
+    screen: CategoriesList,
+  },
+  _CategoryButton: {
+    screen: CategoryButton
+  },
+  _Login: {
+    screen: Login
+  }
+},
+  {
+    initialRouteName: "_CategoriesList"
+  });
 //AppRegistry.registerComponent('CategoriesList',()=>CategoriesList);

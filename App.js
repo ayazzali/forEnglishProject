@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { AsyncStorage, AppRegistry, TextInput, View, ScrollView, ListView, StyleSheet, Text, TouchableHighlight, Button } from 'react-native'
 import { StackNavigator } from "react-navigation"
+import {CategoryFull} from './CategoryFull'
+import {Login} from './Login'
 //import { writeFile, readFile } from 'react-native-fs';
 
 // import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
@@ -24,50 +26,6 @@ import { StackNavigator } from "react-navigation"
 //   /* DO SOMETHING WITH workbook HERE */
 // });
 
-class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    //   this.state = {
-    //     name: "",
-    //     surname: ""
-    //   }
-  }
-
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <View style={styles.card}>
-          <Text style={styles.title} >Пожалуйста представьтесь:</Text>
-        </View>
-        <View style={styles.card}>
-          <TextInput style={styles.input} placeholder="Имя" autoCorrect={false}
-            onChangeText={(value) => this.setState({ name: value })} />
-        </View>
-        <View style={styles.card}>
-          <TextInput style={styles.input} placeholder="Фамилия" autoCorrect={false}
-            onChangeText={(value) => this.setState({ surname: value })} />
-        </View>
-        <View style={styles.card}>
-          <TextInput style={styles.input}
-            placeholder="№ группы, если ты каист"
-            autoCorrect={false}
-            onChangeText={(value) => this.setState({ group: value })} />
-        </View>
-        <View style={styles.card}>
-          <Button title="Вход" onPress={this._signInAsync} />
-        </View>
-      </View>
-    );
-  }
-
-  _signInAsync = async () => {
-    await AsyncStorage.setItem('name', this.state.name);
-    await AsyncStorage.setItem("surname", this.state.surname)
-    await AsyncStorage.setItem("group", this.state.group)
-    console.log(this.state.name)
-    this.props.navigation.navigate('_CategoriesList');
-  };
-}
 
 
 class CategoriesList extends React.Component {
@@ -80,7 +38,7 @@ class CategoriesList extends React.Component {
     })
       .then((r) => r.json())
       .then((json) => {
-        console.log(json)
+        //console.log(json)
         let g = json.map((q,id) => { return {"title":q.text,"id":id}});
         this.setState({ categories: g })
       })
@@ -97,7 +55,8 @@ class CategoriesList extends React.Component {
 
   render() {
     const categoriesCopmponents =
-      (this.state.categories.map((val) => <CategoryButton Name={val} />));
+      (this.state.categories.map((val) => <Button /*Id={0}*/ title={val.title? val.title:""}// 
+      onPress={()=>this.props.navigation.navigate('_CategoryFull', { name: val.title})}/>));
     return (
       <ScrollView style={styles.FlexStyle} >
         {categoriesCopmponents}
@@ -114,8 +73,10 @@ class CategoriesList extends React.Component {
   }
 }
 
+//deprecated
 class CategoryButton extends React.Component {
   render() {
+    
     return (
       <TouchableHighlight onPress={this._goToCategory}>
         <Text>
@@ -138,25 +99,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'red'
   },
 
-  input: {
-    height: 40,
-    minWidth: 200,
-    //width:300,
-    color: '#9197A3',
-    backgroundColor: '#FAFAFA',
-    borderColor: '#D8D8D8',
-    borderRadius: 4,
-    borderWidth: 1,
-    paddingHorizontal: 10,
-  },
-  title: {
-    fontSize: 30,//40
-    textAlign: 'center',
-  },
-  card: {
-    flex: 0,
-    marginVertical: 10
-  },
 })
 
 export default StackNavigator({
@@ -168,7 +110,10 @@ export default StackNavigator({
   },
   _Login: {
     screen: Login
-  }
+  },
+_CategoryFull: {
+    screen: CategoryFull
+  },
 },
   {
     initialRouteName: "_CategoriesList"

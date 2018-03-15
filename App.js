@@ -68,7 +68,7 @@ class CategoriesList extends React.Component {
 
     const categoriesCopmponents =
       (this.state.categories.map((val,id) => <Button key={id} title={val.title ? val.title : ""} // 
-        onPress={() => this.props.navigation.navigate('_CategoryFull', { name: val.title })} />));
+        onPress={() => this.props.navigation.navigate('_CategoryFull', { name: val.title,href: val.href})} />));
     return (
       <ScrollView style={styles.FlexStyle} >
         {categoriesCopmponents}

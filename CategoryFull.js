@@ -16,7 +16,7 @@ export class CategoryFull extends React.Component {
       ]
     }
 
-    var data = ExData().then((array)=>{
+    var data = ExData(props.navigation.getParam('href', '')).then((array)=>{
       let g = array.map((q, id) => { return { "Word": q[0], "Translate": q[1],Percent:0, key:id } });
          this.setState({ Words: g })
     })

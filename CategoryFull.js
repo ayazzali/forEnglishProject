@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { AppRegistry, View, ScrollView, ListView, StyleSheet, Text, TouchableHighlight } from 'react-native'
 
+import {ExData} from './ParseCategories'
+
+
 export class CategoryFull extends React.Component {
   constructor(props) {
     super(props)
@@ -12,12 +15,17 @@ export class CategoryFull extends React.Component {
       Words: [{ Word: "qwerqw", Translate: "цукйцук", Percent: 0 }, { Word: "qwerqw", Translate: "цукйцук", Percent: 0 }, { Word: "qwerqw", Translate: "цукйцук", Percent: 0 },//,"Word - translation - persent --Transcript --Voice","Words5468","Words aqwerwe","Words5468","Words aqwerwe","Words5468","Words aqwerwe","Words5468","Words aqwerwe","Words5468","Words aqwerwe","Words5468","Words aqwerwe","Words5468","Words aqwerwe","Words5468",
       ]
     }
+
+    var data = ExData().then((array)=>{
+      let g = array.map((q, id) => { return { "Word": q[0], "Translate": q[1],Percent:0, key:id } });
+         this.setState({ Words: g })
+    })
   }
   //после нажатия на категорию для её изучения 
   // сначала показывается список слов и % их изучения, статискика
   render() {
     const name = this.props.navigation.getParam('name', '');
-    const words = this.state.Words.map((value) => <WordRow {...value} />/*<Text>{value}</Text>*/)
+    const words = this.state.Words.map((value,id) => <WordRow {...value}  />/*<Text>{value}</Text>*/)
     return (
       <View style={styles.Border//, {height:100, color:"orange" /*width:200*/}
       }

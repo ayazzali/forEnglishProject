@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { AsyncStorage, AppRegistry, TextInput, View, ScrollView, ListView, StyleSheet, Text, TouchableHighlight, Button } from 'react-native'
 import { StackNavigator } from "react-navigation"
-import {CategoryFull} from './CategoryFull'
-import {Login} from './Login'
+import { CategoryFull } from './CategoryFull'
+import { Login } from './Login'
+// import { parse } from 'path';
+import { ExData,ExDataNamesWithHrefs } from './ParseCategories'
 //import { writeFile, readFile } from 'react-native-fs';
 
 // import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
@@ -32,16 +34,20 @@ class CategoriesList extends React.Component {
   componentWillMount() {
     this.setState({ categories: ["Загрузка..."] })
 
-    const pattern = "hello"//"^a.{4}$";
-    fetch("https://dictionary.skyeng.ru/api/public/v1/words/search?search=" + pattern, {
-      method: "get",
+    // const pattern = "hello"//"^a.{4}$";
+    // fetch("https://dictionary.skyeng.ru/api/public/v1/words/search?search=" + pattern, {
+    //   method: "get",
+    // })
+    //   .then((r) => r.json())
+    //   .then((json) => {
+    //     //console.log(json)
+    //     let g = json.map((q, id) => { return { title: q.text, "id": id } });//"key": id ,
+    //     this.setState({ categories: g })
+    //   })
+    ExDataNamesWithHrefs().then((categories)=>{
+      let g = categories.map((q, id) => { return { title: q.name, href: q.href, id: id } });//"key": id ,
+         this.setState({ categories: g })
     })
-      .then((r) => r.json())
-      .then((json) => {
-        //console.log(json)
-        let g = json.map((q,id) => { return {"title":q.text,"id":id}});
-        this.setState({ categories: g })
-      })
       .catch((error) => {
         console.error(error);
         AsyncStorage.getItem("name")
@@ -54,9 +60,15 @@ class CategoriesList extends React.Component {
   }
 
   render() {
+    // let xml = require('react-native').NativeModules.RNMXml
+    // console.log(xml)
+    // xml.queryXml('<doc a="V1">V2</doc>',
+    //   ['/doc/@a', '/doc'],
+    //   results => results.map(nodes => console.log(nodes[0])))
+
     const categoriesCopmponents =
-      (this.state.categories.map((val) => <Button /*Id={0}*/ title={val.title? val.title:""}// 
-      onPress={()=>this.props.navigation.navigate('_CategoryFull', { name: val.title})}/>));
+      (this.state.categories.map((val,id) => <Button key={id} title={val.title ? val.title : ""} // 
+        onPress={() => this.props.navigation.navigate('_CategoryFull', { name: val.title })} />));
     return (
       <ScrollView style={styles.FlexStyle} >
         {categoriesCopmponents}
@@ -76,7 +88,7 @@ class CategoriesList extends React.Component {
 //deprecated
 class CategoryButton extends React.Component {
   render() {
-    
+
     return (
       <TouchableHighlight onPress={this._goToCategory}>
         <Text>
@@ -111,7 +123,7 @@ export default StackNavigator({
   _Login: {
     screen: Login
   },
-_CategoryFull: {
+  _CategoryFull: {
     screen: CategoryFull
   },
 },

@@ -1,7 +1,9 @@
 {
+  "name": "qqq",
+  "displayName": "qqq",
   "expo": {
-    "sdkVersion": "25.0.0",
     "slug": "qqq",
-    "name": "qqq"
+    "name": "qqq",
+    "sdkVersion": "25.0.0"
   }
 }

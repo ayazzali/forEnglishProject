@@ -8,7 +8,7 @@ import { inspect, log, format } from 'react-native-util'
 export async function ExData(href) {
   const pattern = ""//"^a.{4}$";
   log(href)
-  return fetch(href)//"http://studyfun.ru/Слова%20по%20теме/Театр%2c%20цирк%2c%20кино%2c%20эстрада/")
+  return fetch(href,{cache:"force-cache"})//"http://studyfun.ru/Слова%20по%20теме/Театр%2c%20цирк%2c%20кино%2c%20эстрада/")
     .catch((error) => console.error("error0 "+ error))
     .then((r) => r.text()).catch((error) => console.error("error1 "+error))
     .then((xml) => {

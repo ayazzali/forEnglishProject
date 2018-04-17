@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { AsyncStorage, AppRegistry, TextInput, View, ScrollView, ListView, StyleSheet, Text, TouchableHighlight, Button } from 'react-native'
 import { StackNavigator } from "react-navigation"
+import { RadioButtons } from "react-native-radio-buttons"
 
 export class Login extends React.Component {
   constructor(props) {
@@ -10,35 +11,54 @@ export class Login extends React.Component {
     //     surname: ""
     //   }
   }
+  setSelectedOption(selectedOption) {
+
+    alert(selectedOption);
+    this.setState({
+      selectedOption
+    });
+    var t = this.state;
+    debugger;
+  }
 
   render() {
+    let options = ["Преподаватель", "Студент"];
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <View style={styles.card}>
           <Text style={styles.title} >Пожалуйста представьтесь:</Text>
         </View>
+        <RadioButtons //npm i react-native-flexi-radio-button
+          options={options}
+          onSelection={this.setSelectedOption.bind(this)}
+          renderContainer={RadioButtons.renderVerticalContainer}
+        />
+
         <View style={styles.card}>
-          <TextInput style={styles.input} placeholder="Имя" autoCorrect={false}
-            onChangeText={(value) => this.setState({ name: value })} />
-        </View>
-        <View style={styles.card}>
-          <TextInput style={styles.input} placeholder="Фамилия" autoCorrect={false}
-            onChangeText={(value) => this.setState({ surname: value })} />
+          <TextInput style={styles.input}
+            placeholder="ФИО" autoCorrect={false}
+            onChangeText={(value) => this.setState({ fullname: value })} />
         </View>
         <View style={styles.card}>
           <TextInput style={styles.input}
-            placeholder="№ группы, если ты каист"
+            placeholder="username"
+            autoCorrect={false}
+            onChangeText={(value) => this.setState({ username: value })} />
+        </View>
+        <View style={styles.card}>
+          <TextInput style={styles.input}///, если ты каист
+            placeholder="№ группы"
             autoCorrect={false}
             onChangeText={(value) => this.setState({ group: value })} />
         </View>
         <View style={styles.card}>
-          <Button title="Вход" onPress={this._signInAsync} />
+          <Button title="Вход" onPress={this._signInAsync.bind(this)} />
         </View>
       </View>
     );
   }
 
-  _signInAsync = async () => {
+  _signInAsync = async () => {///
     await AsyncStorage.setItem('name', this.state.name);
     await AsyncStorage.setItem("surname", this.state.surname)
     await AsyncStorage.setItem("group", this.state.group)

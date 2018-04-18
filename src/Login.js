@@ -3,7 +3,7 @@ import { AsyncStorage, AppRegistry, TextInput, View, ScrollView, ListView, Style
 import { StackNavigator } from "react-navigation"
 //import { RadioButtons } from "react-native-radio-buttons"
 import { RadioGroup, RadioButton } from "react-native-flexi-radio-button"
-//import { Checkbox } from "ReactNative-checkbox"
+import CheckBox from 'react-native-check-box'
 export class Login extends React.Component {
   _sudent = "sudent";
   _teacher = "teacher";
@@ -34,27 +34,32 @@ export class Login extends React.Component {
     let options = ["Преподаватель", "Студент"];
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <View style={styles.card}>
-          <Text style={styles.title} >Пожалуйста представьтесь:</Text>
-        </View>
-        <View style={styles.card}>
-          <TextInput style={styles.input}
-            placeholder="Логин"
-            autoCorrect={false}
-            onChangeText={(value) => this.setState({ username: value })} />
-        </View>
-        <View style={styles.card}>
-          <TextInput style={styles.input}
-            placeholder="ФИО" autoCorrect={false}
-            onChangeText={(value) => this.setState({ fullname: value })} />
-        </View>
-        {this.Pass()}
-        
+        <ScrollView>
+          <View style={styles.card}>
+            <Text style={styles.title} >Пожалуйста представьтесь:</Text>
+          </View>
+          <View style={styles.card}>
+            <TextInput style={styles.input}
+              placeholder="ФИО" autoCorrect={false}
+              onChangeText={(value) => this.setState({ fullname: value })} />
+          </View>
+          <View style={styles.card}>
+            <TextInput style={styles.input}
+              placeholder="Логин"
+              autoCorrect={false}
+              onChangeText={(value) => this.setState({ username: value })} />
+          </View>
+          {this.Pass()}
+          <CheckBox
+            style={{ flex: 1, padding: 10 }}
+            onClick={() => { this.setState((prev) => { return { fromkai: !prev.fromkai } }); debugger; }}
+            leftText={"Из КАИ?"}
+          />
 
-
-        {this.state.fromkai ? this.Status() : null}
-        {this.state.status ? this.WhatGroup() : null}
-        {this.state.group ? this.SignIn() : null}
+          {this.state.fromkai ? this.Status() : null}
+          {this.state.status ? this.WhatGroup() : null}
+          {this.SignIn()}
+        </ScrollView>
       </View>
     );
   }
@@ -89,7 +94,7 @@ export class Login extends React.Component {
     return (
       <View style={styles.container}>
         <RadioGroup
-          onSelect={(index, value) => this.setState({ status: value }) // this.onSelect(index, value)
+          onSelect={(index, value) => this.setState({ status: value })
           }>
           <RadioButton value={this._teacher} >
             <Text>Преподаватель</Text>

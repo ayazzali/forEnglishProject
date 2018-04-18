@@ -1,15 +1,21 @@
 import React, { Component } from 'react'
 import { AsyncStorage, AppRegistry, TextInput, View, ScrollView, ListView, StyleSheet, Text, TouchableHighlight, Button } from 'react-native'
 import { StackNavigator } from "react-navigation"
-import { RadioButtons } from "react-native-radio-buttons"
-
+//import { RadioButtons } from "react-native-radio-buttons"
+import { RadioGroup, RadioButton } from "react-native-flexi-radio-button"
+//import { Checkbox } from "ReactNative-checkbox"
 export class Login extends React.Component {
+  _sudent = "sudent";
+  _teacher = "teacher";
   constructor(props) {
     super(props);
-    //   this.state = {
-    //     name: "",
-    //     surname: ""
-    //   }
+    this.state = {
+      username: '',
+      fullname: '',
+      status: '',
+      group: '',
+      fromkai: ''
+    }
   }
   setSelectedOption(selectedOption) {
 
@@ -19,6 +25,9 @@ export class Login extends React.Component {
     });
     var t = this.state;
     debugger;
+  } onSelect(index, value) {
+
+    alert(index + " " + value);
   }
 
   render() {
@@ -28,36 +37,70 @@ export class Login extends React.Component {
         <View style={styles.card}>
           <Text style={styles.title} >Пожалуйста представьтесь:</Text>
         </View>
-        <RadioButtons //npm i react-native-flexi-radio-button
-          options={options}
-          onSelection={this.setSelectedOption.bind(this)}
-          renderContainer={RadioButtons.renderVerticalContainer}
-        />
-
+        <View style={styles.card}>
+          <TextInput style={styles.input}
+            placeholder="Логин"
+            autoCorrect={false}
+            onChangeText={(value) => this.setState({ username: value })} />
+        </View>
         <View style={styles.card}>
           <TextInput style={styles.input}
             placeholder="ФИО" autoCorrect={false}
             onChangeText={(value) => this.setState({ fullname: value })} />
         </View>
-        <View style={styles.card}>
-          <TextInput style={styles.input}
-            placeholder="username"
-            autoCorrect={false}
-            onChangeText={(value) => this.setState({ username: value })} />
-        </View>
-        <View style={styles.card}>
-          <TextInput style={styles.input}///, если ты каист
-            placeholder="№ группы"
-            autoCorrect={false}
-            onChangeText={(value) => this.setState({ group: value })} />
-        </View>
-        <View style={styles.card}>
-          <Button title="Вход" onPress={this._signInAsync.bind(this)} />
-        </View>
+        {this.Pass()}
+        
+
+
+        {this.state.fromkai ? this.Status() : null}
+        {this.state.status ? this.WhatGroup() : null}
+        {this.state.group ? this.SignIn() : null}
       </View>
     );
   }
-
+  WhatGroup() {
+    return (
+      <View style={styles.card}>
+        <TextInput style={styles.input}///, если ты каист
+          placeholder="№ группы"
+          autoCorrect={false}
+          onChangeText={(value) => this.setState({ group: value })} />
+      </View>)
+  }
+  Pass() {
+    return (
+      <View style={styles.card}>
+        <TextInput style={styles.input}///, если ты каист
+          placeholder="Пароль"
+          autoCorrect={false}
+          secureTextEntry={true}
+          onChangeText={(value) => this.setState({ pass: value })} />
+      </View>)
+  }
+  SignIn() {
+    return (
+      <View style={styles.card}>
+        <Button title="Вход" onPress={this._signInAsync.bind(this)} />
+      </View>
+    )
+  }
+  /// препод или студент
+  Status() {
+    return (
+      <View style={styles.container}>
+        <RadioGroup
+          onSelect={(index, value) => this.setState({ status: value }) // this.onSelect(index, value)
+          }>
+          <RadioButton value={this._teacher} >
+            <Text>Преподаватель</Text>
+          </RadioButton>
+          <RadioButton value={this._sudent}>
+            <Text>Студент</Text>
+          </RadioButton>
+        </RadioGroup>
+      </View>
+    )
+  }
   _signInAsync = async () => {///
     await AsyncStorage.setItem('name', this.state.name);
     await AsyncStorage.setItem("surname", this.state.surname)
@@ -75,7 +118,16 @@ const styles = StyleSheet.create({
   // ColorRed: {
   //   backgroundColor: 'red'
   // },
-
+  container: {
+    flex: 1,
+    //height: 150
+    //marginTop: 40,
+    //padding: 20,
+  },
+  text: {
+    padding: 10,
+    fontSize: 14,
+  },
   input: {
     height: 40,
     minWidth: 200,

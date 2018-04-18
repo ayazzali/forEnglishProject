@@ -11,21 +11,27 @@ import { Badge, Divider, FormInput, Text } from "react-native-elements"
 
 export class CategoriesList extends React.Component {
   componentWillMount() {
-    AsyncStorage.getItem("username")//TODO uname
-      .then((val) => { if (!val) this.props.navigation.navigate("_Login"); })
-
     this.setState({ categories: ["Загрузка..."] })
-    ExDataNamesWithHrefs().then((categories) => {
-      let g = categories.map((q, id) => { return { title: q.name, href: q.href, id: id } });//"key": id ,
-      this.setState({ categories: g })
-    })
-      .catch((error) => { // if 404 404 404 404 404 404 404 404 404 404 404 404 404 404
-        console.error(error);
-        AsyncStorage.getItem("name")
-          .then((value) => {
-            const categories = ["hello", "qwer11", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv22", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv22",]
-            categories.push(value)
-            this.setState({ categories: categories })
+    AsyncStorage.getItem("username")//TODO uname
+      .then((val) => {
+        if (!val) {
+          debugger;
+          this.props.navigation.navigate("_Login");
+          throw "log in failed";
+          return;
+        }
+        ExDataNamesWithHrefs().then((categories) => {
+          let g = categories.map((q, id) => { return { title: q.name, href: q.href, id: id } });//"key": id ,
+          this.setState({ categories: g })
+        })
+          .catch((error) => { // if 404 404 404 404 404 404 404 404 404 404 404 404 404 404
+            console.error(error);
+            AsyncStorage.getItem("name")
+              .then((value) => {
+                const categories = ["hello", "qwer11", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv22", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv22",]
+                categories.push(value)
+                this.setState({ categories: categories })
+              })
           })
       })// end 404
   }
@@ -65,7 +71,7 @@ export class CategoriesList extends React.Component {
         <Text h4>Остальные категории: </Text>
         {categoriesCopmponents}
 
-        <TouchableHighlight onPress={this._loadMoreCategories}>
+        <TouchableHighlight onPress={this._loadMoreCategories} >
           <Text>
             Загрузить {this.state.categories.length > 1 ? "еще" : "категории"}
           </Text>

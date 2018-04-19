@@ -4,9 +4,10 @@ import { StackNavigator } from "react-navigation"
 import { CategoryFull } from './src/CategoryFull'
 import { Login } from './src/Login'
 // import { parse } from 'path';
-import { ExData,ExDataNamesWithHrefs } from './src/ParseCategories'
-import { CategoriesList} from './src/Main_Categories'
+import { ExData, ExDataNamesWithHrefs } from './src/ParseCategories'
+import { CategoriesList } from './src/Main_Categories'
 import { CategoryButton } from './src/categ'
+import { MainTeacher } from './src/MainTeacher'
 //todo_xls();
 
 
@@ -22,6 +23,9 @@ export default StackNavigator({
   },
   _CategoryFull: {
     screen: CategoryFull
+  },
+  _MainTeacher: {
+    screen: MainTeacher
   },
 },
   {

@@ -57,7 +57,7 @@ export class Login extends React.Component {
           />
 
           {this.state.fromkai ? this.Status() : null}
-          {this.state.status ? this.WhatGroup() : null}
+          {this.state.status == this._sudent ? this.WhatGroup() : null}
           {this.SignIn()}
         </ScrollView>
       </View>
@@ -96,7 +96,7 @@ export class Login extends React.Component {
         <RadioGroup
           onSelect={(index, value) => this.setState({ status: value })
           }>
-          <RadioButton value={this._teacher} >
+          <RadioButton value={this._teacher}>
             <Text>Преподаватель</Text>
           </RadioButton>
           <RadioButton value={this._sudent}>
@@ -107,12 +107,15 @@ export class Login extends React.Component {
     )
   }
   _signInAsync = async () => {///
-    await AsyncStorage.setItem('name', this.state.name);
-    await AsyncStorage.setItem("surname", this.state.surname)
-    await AsyncStorage.setItem("group", this.state.group)
-    console.log(this.state.name)
-    this.props.navigation.navigate('_CategoriesList');
-  };
+    await AsyncStorage.setItem('User', JSON.stringify(this.state))
+    console.trace(JSON.parse(await AsyncStorage.getItem('User')))
+    
+    if (this.state.status == this._teacher)
+      this.props.navigation.navigate('_MainTeacher');
+    else
+      this.props.navigation.navigate('_CategoriesList');
+
+    };
 }
 
 

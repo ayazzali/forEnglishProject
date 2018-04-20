@@ -6,7 +6,7 @@ import { RadioGroup, RadioButton } from "react-native-flexi-radio-button"
 import CheckBox from 'react-native-check-box'
 import {RestFetch} from './util'
 
-  , _users = "users"
+  _users = "users"
 export class Login extends React.Component {
   _sudent = "sudent";
   _teacher = "teacher";

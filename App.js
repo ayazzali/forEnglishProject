@@ -8,6 +8,8 @@ import { ExData, ExDataNamesWithHrefs } from './src/ParseCategories'
 import { CategoriesList } from './src/Main_Categories'
 import { CategoryButton } from './src/categ'
 import { MainTeacher } from './src/MainTeacher'
+import { TeacherStat } from './src/TeacherStat'
+//import * as U from './src/util'
 //todo_xls();
 
 
@@ -27,9 +29,12 @@ export default StackNavigator({
   _MainTeacher: {
     screen: MainTeacher
   },
+  _TeacherStat: {
+    screen: TeacherStat
+  },
 },
   {
-    initialRouteName: "_CategoriesList"
+    initialRouteName: "_Login" //todo techer ot student
   });
 
 function todo_xls() {

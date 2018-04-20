@@ -4,6 +4,9 @@ import { StackNavigator } from "react-navigation"
 //import { RadioButtons } from "react-native-radio-buttons"
 import { RadioGroup, RadioButton } from "react-native-flexi-radio-button"
 import CheckBox from 'react-native-check-box'
+import {RestFetch} from './util'
+
+  , _users = "users"
 export class Login extends React.Component {
   _sudent = "sudent";
   _teacher = "teacher";
@@ -14,7 +17,8 @@ export class Login extends React.Component {
       fullname: '',
       status: '',
       group: '',
-      fromkai: ''
+      pass: '',
+      fromkai: false
     }
   }
   setSelectedOption(selectedOption) {
@@ -52,7 +56,7 @@ export class Login extends React.Component {
           {this.Pass()}
           <CheckBox
             style={{ flex: 1, padding: 10 }}
-            onClick={() => { this.setState((prev) => { return { fromkai: !prev.fromkai } }); debugger; }}
+            onClick={() => { this.setState((prev) => { return { fromkai: !prev.fromkai } }); }}
             leftText={"Из КАИ?"}
           />
 
@@ -85,7 +89,7 @@ export class Login extends React.Component {
   SignIn() {
     return (
       <View style={styles.card}>
-        <Button title="Вход" onPress={this._signInAsync.bind(this)} />
+        <Button title="Вход" onPress={this._signUpAsync.bind(this)} />
       </View>
     )
   }
@@ -106,16 +110,18 @@ export class Login extends React.Component {
       </View>
     )
   }
-  _signInAsync = async () => {///
-    await AsyncStorage.setItem('User', JSON.stringify(this.state))
-    console.trace(JSON.parse(await AsyncStorage.getItem('User')))
-    
-    if (this.state.status == this._teacher)
-      this.props.navigation.navigate('_MainTeacher');
-    else
-      this.props.navigation.navigate('_CategoriesList');
+  _signUpAsync = async () => {///
+    let user=await RestFetch(_users,"POST",this.state)
+    await AsyncStorage.setItem('User', JSON.stringify(user))
+    console.log('[from storage] v')
+    console.log(JSON.parse(await AsyncStorage.getItem('User')))
 
-    };
+    if (this.state.status == this._teacher)
+      this.props.navigation.navigate('_MainTeacher',user);
+    else
+      this.props.navigation.navigate('_CategoriesList',user);
+
+  };
 }
 
 

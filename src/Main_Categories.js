@@ -12,7 +12,7 @@ import { Badge, Divider, FormInput, Text } from "react-native-elements"
 export class CategoriesList extends React.Component {
   componentWillMount() {
     this.setState({ categories: ["Загрузка..."] })
-    AsyncStorage.getItem("username")//TODO uname
+    AsyncStorage.getItem("User")//TODO uname
       .then((val) => {
         if (!val) {
           debugger;

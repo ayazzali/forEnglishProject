@@ -8,35 +8,38 @@ import { ExData, ExDataNamesWithHrefs } from './ParseCategories'
 import { CategoryButton } from './categ'
 //todo_xls();
 import { Badge, Divider, FormInput, Text } from "react-native-elements"
+import * as U from './util'
 
+/// MainStudent
+///->props=User
 export class CategoriesList extends React.Component {
-  componentWillMount() {
-    this.setState({ categories: ["Загрузка..."] })
-    AsyncStorage.getItem("User")//TODO uname
-      .then((val) => {
-        if (!val) {
-          debugger;
-          this.props.navigation.navigate("_Login");
-          throw "log in failed";
-          return;
-        }
-        ExDataNamesWithHrefs().then((categories) => {
-          let g = categories.map((q, id) => { return { title: q.name, href: q.href, id: id } });//"key": id ,
-          this.setState({ categories: g })
-        })
-          .catch((error) => { // if 404 404 404 404 404 404 404 404 404 404 404 404 404 404
-            console.error(error);
-            AsyncStorage.getItem("name")
-              .then((value) => {
-                const categories = ["hello", "qwer11", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv22", "qwer", "qwerqwer", "asd", "asdfasdf", "zxc", "zxcvzxcv22",]
-                categories.push(value)
-                this.setState({ categories: categories })
-              })
-          })
-      })// end 404
+  constructor(props) {
+    super(props)
+    this.state = {
+      studentsCategories:[],
+      categories:[],
+    }
+  }
+  componentDidMount() {
+    U.RestFetch('users/' + this.props.navigation.state.params.id + '/studentsCategories')
+      .then(val => this.setState({ studentsCategories: val }))
+      .catch(console.error)
+
+    ExDataNamesWithHrefs().then((categories) => {
+      let g = categories.map((q, id) => { return { title: q.name, href: q.href, id: id } });//"key": id ,
+      this.setState({ categories: g })
+    }).catch(console.error)
+
   }
 
   render() {
+    //debugger;
+    let studentsCategories = this.state.studentsCategories.map(v =>// todo check v.id on each onpress
+      <TouchableHighlight
+        onPress={() => this.props.navigation.navigate('_StudentStatCategory', v)}>
+        <Text>{v}</Text>
+      </TouchableHighlight>)
+
     const categoriesCopmponents =
       (this.state.categories.map((val, id) =>
         <View
@@ -48,12 +51,10 @@ export class CategoriesList extends React.Component {
           }}>
           <TouchableHighlight
             style={styles.FlexStyle}
-            onPress={() => this.props.navigation.navigate('_CategoryFull', { name: val.title, href: val.href })} >
-
+            onPress={() => this.props.navigation.navigate('_CategoryFull', { name: val.title, href: val.href })}>
             <Text>
               {val.title ? val.title : "пусто... "}
             </Text>
-
           </TouchableHighlight>
           <Badge
             //ToDo: add
@@ -63,10 +64,12 @@ export class CategoriesList extends React.Component {
           <Divider style={{ backgroundColor: 'blue' }} />
         </View>
       ));
+
     return (
       <ScrollView style={styles.FlexStyle} >
         <Text h4>Вы изучаете категории: </Text>
-        <Text>Пока нет...</Text>
+        {studentsCategories}
+        <View style={{ marginTop: 30 }} />
 
         <Text h4>Остальные категории: </Text>
         {categoriesCopmponents}

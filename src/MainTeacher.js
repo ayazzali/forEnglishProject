@@ -8,22 +8,25 @@ export class MainTeacher extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
- 
+
     }
   }
-  
+
   render() {
     //debugger;
-    var UserId=this.props.navigation.state.params.id;
+    var userId = this.props.navigation.state.params.id;
     return (
       <View style={styles.Border//, {height:100, color:"orange" /*width:200*/}
       }>
-        <Button title={"Добавить категорию слов (колоду)"} />
-        <Button title={"Статистика (учеников)"} 
-        onPress={()=>this.props.navigation.navigate("_TeacherStat",this.props.navigation.state.params)} />
+        <Button
+          title={"Добавить категорию слов (колоду)"}
+          onPress={() => this.props.navigation.navigate("_TeacherAddCategory", this.props.navigation.state.params)} />
+        <Button
+          title={"Статистика (учеников)"}
+          onPress={() => this.props.navigation.navigate("_TeacherStat", this.props.navigation.state.params)} />
         <ScrollView>
           <Text >тут будут ваши добавленные колоды </Text>
-          
+
         </ScrollView>
       </View>
     )

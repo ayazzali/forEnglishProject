@@ -4,9 +4,9 @@ import { StackNavigator } from "react-navigation"
 //import { RadioButtons } from "react-native-radio-buttons"
 import { RadioGroup, RadioButton } from "react-native-flexi-radio-button"
 import CheckBox from 'react-native-check-box'
-import {RestFetch} from './util'
+import { RestFetch } from './util'
 
-  _users = "users"
+_users = "users"
 export class Login extends React.Component {
   _sudent = "sudent";
   _teacher = "teacher";
@@ -21,20 +21,20 @@ export class Login extends React.Component {
       fromkai: false
     }
   }
-  setSelectedOption(selectedOption) {
-
-    alert(selectedOption);
-    this.setState({
-      selectedOption
-    });
-    var t = this.state;
-    debugger;
-  } onSelect(index, value) {
-
-    alert(index + " " + value);
-  }
 
   render() {
+    AsyncStorage.getItem("User")
+      .then((val) => {
+        if (val) {
+          let valObj = JSON.parse(val);
+          this.props.navigation.navigate(
+            valObj.status == this._teacher ? "_MainTeacher" : '_CategoriesList', valObj);
+        }
+        else
+          console.log("new User")
+      })
+
+
     let options = ["Преподаватель", "Студент"];
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -69,7 +69,7 @@ export class Login extends React.Component {
   }
   WhatGroup() {
     return (
-      <View style={styles.card}>
+      <View style={styles.card} >
         <TextInput style={styles.input}///, если ты каист
           placeholder="№ группы"
           autoCorrect={false}
@@ -111,15 +111,16 @@ export class Login extends React.Component {
     )
   }
   _signUpAsync = async () => {///
-    let user=await RestFetch(_users,"POST",this.state)
+    //debugger;
+    let user = await RestFetch(_users, "POST", this.state)
     await AsyncStorage.setItem('User', JSON.stringify(user))
     console.log('[from storage] v')
     console.log(JSON.parse(await AsyncStorage.getItem('User')))
 
     if (this.state.status == this._teacher)
-      this.props.navigation.navigate('_MainTeacher',user);
+      this.props.navigation.navigate('_MainTeacher', user);
     else
-      this.props.navigation.navigate('_CategoriesList',user);
+      this.props.navigation.navigate('_CategoriesList', user);
 
   };
 }

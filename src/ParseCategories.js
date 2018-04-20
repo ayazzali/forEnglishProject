@@ -76,7 +76,7 @@ export async function ExData(href) {
 export async function ExDataNamesWithHrefs() {
   const pattern = ""//"^a.{4}$";
   var url = "http://studyfun.ru/%D0%A1%D0%BB%D0%BE%D0%B2%D0%B0%20%D0%BF%D0%BE%20%D1%82%D0%B5%D0%BC%D0%B0%D0%BC"
-  var localUrl_parsed = "http://192.168.43.252:3000/categoties" // TODO
+  var localUrl_parsed = "http://192.168.43.252:3000/categories" // TODO
   console.error("change url to source of categories if you dont use fake db.json on :3000- https://github.com/typicode/json-server")
   return fetch(localUrl_parsed).catch(console.error)
   .then((val)=>val.json()).catch(console.error)

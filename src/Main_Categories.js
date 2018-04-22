@@ -8,7 +8,8 @@ import { ExData, ExDataNamesWithHrefs } from './ParseCategories'
 import { CategoryButton } from './categ'
 //todo_xls();
 import { Badge, Divider, FormInput, Text } from "react-native-elements"
-import * as U from './util'
+import { RestFetch, DB } from './util';
+import { Categories } from './_Categories';
 
 /// MainStudent
 ///->props=User
@@ -16,69 +17,42 @@ export class CategoriesList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      studentsCategories:[],
-      categories:[],
+      nothing: true,
     }
   }
   componentDidMount() {
-    U.RestFetch('users/' + this.props.navigation.state.params.id + '/studentsCategories')
-      .then(val => this.setState({ studentsCategories: val }))
-      .catch(console.error)
-
-    ExDataNamesWithHrefs().then((categories) => {
-      let g = categories.map((q, id) => { return { title: q.name, href: q.href, id: id } });//"key": id ,
-      this.setState({ categories: g })
-    }).catch(console.error)
-
   }
 
   render() {
     //debugger;
-    let studentsCategories = this.state.studentsCategories.map(v =>// todo check v.id on each onpress
-      <TouchableHighlight
-        onPress={() => this.props.navigation.navigate('_StudentStatCategory', v)}>
-        <Text>{v}</Text>
-      </TouchableHighlight>)
-
-    const categoriesCopmponents =
-      (this.state.categories.map((val, id) =>
-        <View
-          key={id}
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between"
-          }}>
-          <TouchableHighlight
-            style={styles.FlexStyle}
-            onPress={() => this.props.navigation.navigate('_CategoryFull', { name: val.title, href: val.href })}>
-            <Text>
-              {val.title ? val.title : "пусто... "}
-            </Text>
-          </TouchableHighlight>
-          <Badge
-            //ToDo: add
-            value={"+"}
-            onPress={() => this.props.navigation.navigate('addToMyListAndSaveToPhone', { name: val.title, href: val.href })}
-          />
-          <Divider style={{ backgroundColor: 'blue' }} />
-        </View>
-      ));
-
+    console.log("rendering main_Categories")
+    var user = this.props.navigation.state.params;
     return (
       <ScrollView style={styles.FlexStyle} >
-        <Text h4>Вы изучаете категории: </Text>
-        {studentsCategories}
-        <View style={{ marginTop: 30 }} />
+        {user.fromkai && user.status == "student" && user.teacherId ?
+          <View>
+            <Text h4>Лессоны вашей группы: </Text>
+            <Categories
+              getCategories={() => RestFetch(DB.users + '/' + user.teacherId + '/' + DB.usersCategories + '?_expand=category', 'get').then(expanded => expanded.map(ex => ex.category))}
+              navigation={this.props.navigation}
+            /></View>
 
-        <Text h4>Остальные категории: </Text>
-        {categoriesCopmponents}
+          :
+          <View>
+            <Text h4>Вами добавленные категории: </Text>
+            <Categories
+              getCategories={() => RestFetch(DB.users + '/' + user.id + '/' + DB.usersCategories + '?_expand=category', 'get').then(expanded => expanded.map(ex => ex.category))}
+              navigation={this.props.navigation}/>
+            <View style={{ marginTop: 30 }} />
 
-        <TouchableHighlight onPress={this._loadMoreCategories} >
-          <Text>
-            Загрузить {this.state.categories.length > 1 ? "еще" : "категории"}
-          </Text>
-        </TouchableHighlight>
+            <Text h4>Остальные категории: </Text>
+            <Categories
+              add={(category) => RestFetch(DB.usersCategories + '/', 'post', { categoryId: category.id, userId: userId })
+                .then(r => { if (r) { alert("Категория добавлена"); } })}
+              navigation={this.props.navigation}
+            />
+          </View>
+        }
       </ScrollView>
     )
   }

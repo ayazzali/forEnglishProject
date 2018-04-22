@@ -11,7 +11,7 @@ export class TeacherStat extends React.Component {
       students: [],
     }
     let userId = props.navigation.state.params.id;
-    U.RestFetch('users?q=teacherId=' + userId)// todo CHECK
+    U.RestFetch('users?teacherId=' + userId)// todo CHECK
       .then(val => this.setState({ students: val }))
   }
 
@@ -19,18 +19,18 @@ export class TeacherStat extends React.Component {
     //debugger;
     let students = this.state.students.map(v =>
       <TouchableHighlight
+      key={v.id}
         onPress={() => this.props.navigation.navigate('_StudentStat', v)}>
-        <Text>{v.fullname}</Text>
+        <Text>- {v.fullname?v.fullname:"[Name is undefined]"}</Text>
       </TouchableHighlight>)
 
     return (
-      <View style={styles.Border//, {height:100, color:"orange" /*width:200*/}
-      }>
-        <Text >тут будет поиск </Text>
+      <View style={styles.Border}>
+        <Text>__тут будет поиск </Text>
 
         <ScrollView>
           <Text >Ваши ученики:</Text>
-          {students}
+          {students ? students : "У вас нет учеников"}
         </ScrollView>
       </View>
     )

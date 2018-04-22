@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { AppRegistry, Button, View, ScrollView, ListView, StyleSheet, Text, TouchableHighlight } from 'react-native'
 
 import { ExData } from './ParseCategories'
+import { Categories } from './_Categories';
+import { DB, RestFetch } from './util';
 
 
 export class MainTeacher extends React.Component {
@@ -25,8 +27,11 @@ export class MainTeacher extends React.Component {
           title={"Статистика (учеников)"}
           onPress={() => this.props.navigation.navigate("_TeacherStat", this.props.navigation.state.params)} />
         <ScrollView>
-          <Text >тут будут ваши добавленные колоды </Text>
-
+          <Text >Ваши добавленные колоды: </Text>
+          <Categories
+            getCategories={() => RestFetch(DB.users+ '/'+userId+'/'+DB.usersCategories+'?_expand=category', 'get').then(expanded=>expanded.map(ex=>ex.category))}
+            navigation={this.props.navigation}
+          />
         </ScrollView>
       </View>
     )

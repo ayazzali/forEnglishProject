@@ -22,16 +22,16 @@ export class CategoryFull extends React.Component {
         this.setState({ Words: g })
       })
   }
-  componentDidMount = () => console.warn("componentDidMount")
   //после нажатия на категорию для её изучения 
   // сначала показывается список слов и % их изучения, статискика
   render() {
     const name = this.props.navigation.getParam('name', '');
-    const words = this.state.Words.map((value, id) => <WordRow {...value} />/*<Text>{value}</Text>*/)
+    const words = this.state.Words.map((value, id) => <WordRow key={id} {...value} />/*<Text>{value}</Text>*/)
     return (
       <View style={styles.Border//, {height:100, color:"orange" /*width:200*/}
       }>
-        <Button title={"___Добавить категорию на изучение"} onPress />
+        {// <Button title={"___Добавить категорию на изучение"} />
+}
         <Button title={"___Учить"} />
         <ScrollView>
           <Text h4>Категория: {name}</Text>

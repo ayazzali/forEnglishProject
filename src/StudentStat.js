@@ -8,18 +8,18 @@ export class StudentStat extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      studentsCategories,
+      usersCategories,
     }
     
-    U.RestFetch('users/' + userId + '/studentsCategories')
-      .then(val => this.setState({ studentsCategories: val }))
+    U.RestFetch('users/' + userId + '/usersCategories')
+      .then(val => this.setState({ usersCategories: val }))
   }
 
   render() {
     debugger;
     let props = this.props.navigation.state.params;
     let userId = props.id;
-    let studentsCategories = this.students.map(v =>
+    let usersCategories = this.students.map(v =>
       <TouchableHighlight
         onPress={() => this.props.navigation.navigate('_StudentStatCategory', v)}>
         <Text>{v}</Text>
@@ -33,7 +33,7 @@ export class StudentStat extends React.Component {
 
         <ScrollView>
           <Text >Ваши ученики </Text>
-          {studentsCategories}
+          {usersCategories}
         </ScrollView>
       </View>
     )

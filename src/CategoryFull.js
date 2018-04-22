@@ -31,8 +31,8 @@ export class CategoryFull extends React.Component {
     return (
       <View style={styles.Border//, {height:100, color:"orange" /*width:200*/}
       }>
-        <Button title={"Добавить категорию на изучение"} onPress />
-        <Button title={"Учить"} />
+        <Button title={"___Добавить категорию на изучение"} onPress />
+        <Button title={"___Учить"} />
         <ScrollView>
           <Text h4>Категория: {name}</Text>
           <Text >Описание: {this.state.Description}</Text>

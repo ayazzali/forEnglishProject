@@ -47,7 +47,7 @@ export class CategoriesList extends React.Component {
 
             <Text h4>Остальные категории: </Text>
             <Categories
-              add={(category) => RestFetch(DB.usersCategories + '/', 'post', { categoryId: category.id, userId: userId })
+              add={(category) => RestFetch(DB.usersCategories + '/', 'post', { categoryId: category.id, userId: user.id })
                 .then(r => { if (r) { alert("Категория добавлена"); } })}
               navigation={this.props.navigation}
             />

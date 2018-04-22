@@ -9,6 +9,7 @@ import { CategoriesList } from './src/Main_Categories'
 import { CategoryButton } from './src/categ'
 import { MainTeacher } from './src/MainTeacher'
 import { TeacherStat } from './src/TeacherStat'
+import { TeacherAddCategory } from './src/TeacherAddCategory'
 //import * as U from './src/util'
 //todo_xls();
 
@@ -31,6 +32,9 @@ export default StackNavigator({
   },
   _TeacherStat: {
     screen: TeacherStat
+  },
+  _TeacherAddCategory: {
+    screen: TeacherAddCategory
   },
 },
   {

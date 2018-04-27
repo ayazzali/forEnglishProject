@@ -10,6 +10,7 @@ import { CategoryButton } from './src/categ'
 import { MainTeacher } from './src/MainTeacher'
 import { TeacherStat } from './src/TeacherStat'
 import { TeacherAddCategory } from './src/TeacherAddCategory'
+import { ExSort } from './src/ExampleSort';
 //import * as U from './src/util'
 //todo_xls();
 
@@ -36,9 +37,12 @@ export default StackNavigator({
   _TeacherAddCategory: {
     screen: TeacherAddCategory
   },
+  ExSort: {
+    screen: ExSort
+  },
 },
   {
-    initialRouteName: "_Login" //todo techer ot student
+    initialRouteName: 'ExSort'//"_Login" //todo techer ot student
   });
 
 function todo_xls() {

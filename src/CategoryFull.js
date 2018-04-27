@@ -31,7 +31,7 @@ export class CategoryFull extends React.Component {
       <View style={styles.Border//, {height:100, color:"orange" /*width:200*/}
       }>
         {// <Button title={"___Добавить категорию на изучение"} />
-}
+        }
         <Button title={"___Учить"} />
         <ScrollView>
           <Text h4>Категория: {name}</Text>
@@ -43,7 +43,17 @@ export class CategoryFull extends React.Component {
   }
 }
 
-function WordRow(props) {
+export function WordRow(props) {
+  var q = [];
+  for (var key in props.word) {
+    q.push(props.word[key])
+  }
+  //debugger;
+  q = q.map(p => <Text key={p}> {p}</Text>)
+
+  // <Text> {props.Word}</Text>
+  // <Text> {props.Translate}</Text>
+  // <Text> {props.Percent}%</Text>
   return (
 
     <View style={{
@@ -51,10 +61,10 @@ function WordRow(props) {
       flexDirection: 'row',
       justifyContent: 'space-between',
     }}>
+      {q}
+      {
 
-      <Text> {props.Word}</Text>
-      <Text> {props.Translate}</Text>
-      <Text> {props.Percent}%</Text>
+      }
     </View>
   )
 

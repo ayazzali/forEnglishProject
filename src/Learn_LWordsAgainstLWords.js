@@ -12,52 +12,115 @@ import { DB_actionNames, DB, __wordsInMemory } from './util'
 import { RadioButton } from 'react-native-flexi-radio-button';
 
 export function wrapLearn_LWordsAgainstLWords() {
-  return (
-    <Learn_LWordsAgainstLWords lessonName='знакомство' />
-  )
+  return (<Learn_LWordsAgainstLWords lessonName='знакомство' />)
 }
 
-/// передай мне тему урока - lessonName
+/// дай мне тему урока - lessonName
 export class Learn_LWordsAgainstLWords extends React.Component {
   constructor(props) {
     super(props)
+    let __w = __wordsInMemory.w
+      .filter(_ => _.filter == props.lessonName)
+      .map(_ => { _.isPressed = false; return { ..._ } });
+
+    //console.log(__w)
     this.state = {
-      wordsReady: __wordsInMemory.w//do not
-      , wordsLeft: __wordsInMemory.w.filter(_ => _.filter == props.lessonName)//
-      , wordsRight: __wordsInMemory.w
-        .filter(_ => _.filter == props.lessonName)
-        .sort(function (a, b) {
-          let g = 0.5 - Math.random();
-          return g > 0 ? 1 : g > 0 ? -1 : 0;
-        })
+      wordsDone: []//__w//do not{
+      , wordsLeft: __w.map(_=>{return{word:_.word,id: _.id}})
+      , wordsRight: __w
+       .slice()
+       //.sort(function (a, b) {
+      //   let g = 0.5 - Math.random();
+      //   return g > 0 ? 1 : g < 0 ? -1 : 0;
+      // })
       //(0.5 - Math.random())//
       , curRight: false
       , curLeft: false
     }
     console.log("rendering[constructor] _categories")
-    console.log("wordsRight= " + this.state.wordsRight.map(_ => _.id).join(" "))
-    //this.setState({ words:  })
+    //console.log("wordsRight= " + this.state.wordsRight.map(_ => _.id).join(" "))
+    //this.setState({ wordsDone: {} })
   }
 
-  clickOnWordRight(wordId, IsWordTapped) {
+
+  clickOnWordRight(wordId) {
+    debugger
     console.log("clickOnWordRight");
-    this.setState({ curRight: IsWordTapped });
+    let IsWordTapped = false;
+    this.setState(prv => {
+      let newWords = prv.wordsRight.map(_ => {
+        if (_.id == wordId) {
+          _.isPressed = !_.isPressed;
+          IsWordTapped = _.isPressed
+        }
+        else
+          _.isPressed = false;
+        return { ..._ }
+      });
+      return {
+        wordsRight: newWords,
+        curRight: IsWordTapped
+      }
+    })
     this.clickOnWord(wordId)
   }
 
-  clickOnWordLeft(wordId, IsWordTapped) {
+  /// copy code from behind
+  clickOnWordLeft(wordId) {
+    debugger
     console.log("clickOnWordLeft");
-    this.setState({ curLeft: IsWordTapped });
-    this.clickOnWord(wordId)
+    let IsWordTapped = false;
+    this.setState(prv => {
+      let oldR=prv.wordsRight.slice();
+      let g = prv.wordsLeft.slice().map(_ => {
+        if (_.id == wordId) {
+          _.isPressed = !_.isPressed;
+          IsWordTapped = _.isPressed
+        }
+        else
+          _.isPressed = false;
+        return { ..._ }
+      }).slice();
+      return {
+        wordsLeft: g,
+        wordsRight: oldR,
+        curLeft: IsWordTapped
+      }
+    })
+    //! do not
+    let good = this.clickOnWord(wordId)
+    // if(!good)
+    // {
+
+    // }
   }
 
+  //prv
   clickOnWord(wordId) {
-    if (this.state.curRight && this.state.curLeft) {
-      let f = this.state.wordsLeft.findIndex(_ => _.id == wordId)
-      console.log(f)
-      //do 
-      //this.state.words.sort(_ => _.)
-    }
+    return
+    this.setState(_prv => {
+      if (_prv.curRight && _prv.curLeft) {
+        let ChoosedWordFromLeft = _prv.wordsLeft.findIndex(_ => _.id == wordId);
+
+        let ChoosedWordFromRight = _prv.wordsRight.findIndex(_ => _.isPressed);
+        if (ChoosedWordFromLeft == ChoosedWordFromRight) {
+          //return
+          //this.setState(prv => {
+          let newWordsDone = _prv.wordsDone;
+          debugger;;
+          wordToPush = __wordsInMemory.w.find(_ => _.id == wordId);
+          newWordsDone.push(wordToPush);
+          return { wordsDone: newWordsDone }
+          //})
+          //delete from right left
+        }
+        else {
+          alert("Вы выбрали неправильный перевод")
+          //  return false;
+        }
+      }
+      //return true;
+    })
   }
 
   onLayout(event) {
@@ -65,24 +128,26 @@ export class Learn_LWordsAgainstLWords extends React.Component {
   }
 
   render() {
-    let leftListWords = this.state.wordsLeft.map(_ => <DottedWord
-      key={_.id}
-      wordId={_.id}
-      word={_.word}
-      clickOnWord={this.clickOnWordLeft.bind(this)} />)
+    let leftListWords = this.state.wordsLeft.map(_ =>
+      <DottedWord
+        key={_.id + 100}
+        wordId={_.id}
+        word={_.word}
+        isPressed={_.isPressed}
+        clickedOnWord={this.clickOnWordLeft.bind(this)} />)
 
-    ///!!!  перемешать
     let rightListWords = this.state.wordsRight.map(_ =>
-      <View>
-        <DottedWord
-          key={_.id}
-          wordId={_.id}
-          word={_.translation}
-          clickOnWord={this.clickOnWordRight.bind(this)} />
-      </View>)
+      <DottedWord
+        key={_.id}
+        wordId={_.id}
+        word={_.translation}
+        isPressed={_.isPressed}
+        clickedOnWord={this.clickOnWordRight.bind(this)} />
+    )
 
     return (
       <ScrollView>
+        <Text>{this.state.wordsDone.length}</Text>
         <View style={styles.viewStyle}>
           <View style={styles.HalfOfView} >
             {leftListWords}
@@ -98,31 +163,20 @@ export class Learn_LWordsAgainstLWords extends React.Component {
 
 /// для слов правого и левого стлобцов
 /// wordId word clickOnWord
-class DottedWord extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      wordIsMarkedNow: false
-    }
-  }
-  render() {
-    let f = this.state.wordIsMarkedNow ? { h2: true } : { h2: false };
-
-    return (
-      <TouchableOpacity onPress={() => {
-        this.setState(prv => { return { wordIsMarkedNow: !prv.wordIsMarkedNow } })
-        this.props.clickOnWord(this.props.wordId, this.state.wordIsMarkedNow);
-      }}>
-        <Text {...f} >
-          {this.props.word}
-        </Text>
-      </TouchableOpacity>
-    )
-  }
-
+function DottedWord(props) {
+  let f = props.isPressed ? { h2: true } : { h2: false };
+  if (props.isPressed)
+    debugger;
+  return (
+    <TouchableOpacity onPress={() => {
+      props.clickedOnWord(props.wordId);
+    }}>
+      <Text {...f} >
+        {props.word}
+      </Text>
+    </TouchableOpacity>
+  )
 }
-
-
 
 const styles = StyleSheet.create({
   viewStyle: {

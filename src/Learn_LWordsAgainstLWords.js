@@ -12,40 +12,68 @@ import { DB_actionNames, DB, __wordsInMemory } from './util'
 import { RadioButton } from 'react-native-flexi-radio-button';
 
 export function wrapLearn_LWordsAgainstLWords() {
-  return (<Learn_LWordsAgainstLWords lessonName='знакомство' />)
+  return (<Wrap__howManyLearn_LWordsAgainstLWords lessonName='знакомство' />)
 }
 
 /// дай мне тему урока - lessonName
+export class Wrap__howManyLearn_LWordsAgainstLWords extends React.Component {
+  /// state c-по
+  constructor(props) {
+    super(props);
+    this.state = {
+      curFirstWordId: 0,
+    }
+    this.__howMany = 3
+  }
+
+  render() {
+    const allWords = __wordsInMemory.w.filter(_ => _.filter == this.props.lessonName).slice(0, 9);
+    let words = allWords.slice(this.state.curFirstWordId, this.state.curFirstWordId + this.__howMany);
+    return (
+      <View>
+        {this.state.curFirstWordId == allWords.length ? <Text>первое задание окончено. Приходите завтра</Text> : null}
+        <Learn_LWordsAgainstLWords
+          words={words}
+          whenFinished={() => this.setState(prv => {
+            debugger;
+            if (prv.curFirstWordId == allWords.length) {
+              alert("Вы выполнили первое задание лессона: " + props.lessonName)
+            }
+            return { curFirstWordId: prv.curFirstWordId + this.__howMany }
+          })} />
+      </View>
+    )
+  }
+}
+
+/// дайте мне words
 export class Learn_LWordsAgainstLWords extends React.Component {
   constructor(props) {
     super(props)
-    let __w = __wordsInMemory.w
-      .filter(_ => _.filter == props.lessonName)
-      .slice(0,5)
-      .map(_ => { _.isPressed = false; return { ..._ } });
-
-    //console.log(__w)
+    let __w = this.props.words.map(_ => { _.isPressed = false; return { ..._ } });
     this.state = {
-      wordsDone: []//__w//do not{
-      , wordsLeft: __w.map(_=>{return{word:_.word,id: _.id,isPressed:_.isPressed}})
-      , wordsRight: __w
-       .slice()
-       .sort(function (a, b) {
-        let g = 0.5 - Math.random();
-        return g > 0 ? 1 : g < 0 ? -1 : 0;
-      })
-      //(0.5 - Math.random())//
+      wordsDone: []
+      //__w//do not{
+      , wordsLeft: __w.map(_ => { return { word: _.word, id: _.id, isPressed: _.isPressed } })
+      , wordsRight: __w.sort(() => 0.5 - Math.random())
       , curRight: false
       , curLeft: false
     }
-    console.log("rendering[constructor] _categories")
-    //console.log("wordsRight= " + this.state.wordsRight.map(_ => _.id).join(" "))
-    //this.setState({ wordsDone: {} })
+    console.log("constructor DONE Learn_LWordsAgainstLWords")
   }
-
-
+  componentWillReceiveProps(props) {
+    let __w = props.words.map(_ => { _.isPressed = false; return { ..._ } });
+    this.state = {
+      wordsDone: []
+      //__w//do not{
+      , wordsLeft: __w.map(_ => { return { word: _.word, id: _.id, isPressed: _.isPressed } })
+      , wordsRight: __w.sort(() => 0.5 - Math.random())
+      , curRight: false
+      , curLeft: false
+    }
+    console.log("componentWillReceiveProps DONE Learn_LWordsAgainstLWords")
+  }
   clickOnWordRight(wordId) {
-    debugger
     console.log("clickOnWordRight");
     let IsWordTapped = false;
     this.setState(prv => {
@@ -68,20 +96,20 @@ export class Learn_LWordsAgainstLWords extends React.Component {
 
   /// copy code from behind
   clickOnWordLeft(wordId) {
-    debugger
     console.log("clickOnWordLeft");
     let IsWordTapped = false;
     this.setState(prv => {
-      let oldR=prv.wordsRight.slice();
-      let g = prv.wordsLeft.slice().map(_ => {
-        if (_.id == wordId) {
-          _.isPressed = !_.isPressed;
-          IsWordTapped = _.isPressed
-        }
-        else
-          _.isPressed = false;
-        return { ..._ }
-      }).slice();
+      let oldR = prv.wordsRight//.slice();
+      let g = prv.wordsLeft//.slice()
+        .map(_ => {
+          if (_.id == wordId) {
+            _.isPressed = !_.isPressed;
+            IsWordTapped = _.isPressed
+          }
+          else
+            _.isPressed = false;
+          return { ..._ }
+        });//.slice();
       return {
         wordsLeft: g,
         wordsRight: oldR,
@@ -95,27 +123,36 @@ export class Learn_LWordsAgainstLWords extends React.Component {
 
     // }
   }
-
   clickOnWord() {
+    this._clickOnWord()
+    this.setState(prv => { // setState called cause i need actual state.
+      if (prv.wordsRight.length == 0) {
+        alert("Вы изучили новые слова");
+        this.props.whenFinished()
+      }
+    })
+
+  }
+  _clickOnWord() {
     this.setState(_prv => {
       if (_prv.curRight && _prv.curLeft) {
         let ChoosedWordFromLeft = _prv.wordsLeft.find(_ => _.isPressed);
         let ChoosedWordFromRight = _prv.wordsRight.find(_ => _.isPressed);
-        console.log(ChoosedWordFromLeft);console.log(ChoosedWordFromRight)
+        console.log(ChoosedWordFromLeft); console.log(ChoosedWordFromRight)
 
-        if (!(ChoosedWordFromLeft&&ChoosedWordFromRight))
-          return ;
-        else if(ChoosedWordFromLeft.id == ChoosedWordFromRight.id) {
-          let wordId=ChoosedWordFromLeft.id
+        if (!(ChoosedWordFromLeft && ChoosedWordFromRight))
+          return;
+        else if (ChoosedWordFromLeft.id == ChoosedWordFromRight.id) {
+          let wordId = ChoosedWordFromLeft.id
           /// wordsDone:
           let newWordsDone = _prv.wordsDone;
-          debugger;
           wordToPush = __wordsInMemory.w.find(_ => _.id == wordId);
           newWordsDone.push(wordToPush);
           return {
             wordsDone: newWordsDone,
-            wordsLeft: _prv.wordsLeft.filter(_=> _.id != wordId),
-            wordsRight: _prv.wordsRight.filter(_=> _.id != wordId)
+            ////+ splice 
+            wordsLeft: _prv.wordsLeft.filter(_ => _.id != wordId),
+            wordsRight: _prv.wordsRight.filter(_ => _.id != wordId)
           }
         }
         else {
@@ -169,13 +206,12 @@ export class Learn_LWordsAgainstLWords extends React.Component {
 /// wordId word clickOnWord
 function DottedWord(props) {
   let f = props.isPressed ? { h2: true } : { h2: false };
-  if (props.isPressed)
-    debugger;
+  if (props.isPressed) { console.log("isPressed"); console.log(props) }
   return (
     <TouchableOpacity onPress={() => {
       props.clickedOnWord(props.wordId);
     }}>
-      <Text {...f} >
+      <Text style={styles.justMediumWord} {...f} >
         {props.word}
       </Text>
     </TouchableOpacity>
@@ -201,6 +237,10 @@ const styles = StyleSheet.create({
   // },
   ColorRed: {
     backgroundColor: 'red'
+  },
+  justMediumWord: {
+    fontSize:18,
+    padding:5
   },
 
 })

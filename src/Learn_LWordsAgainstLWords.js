@@ -21,18 +21,19 @@ export class Learn_LWordsAgainstLWords extends React.Component {
     super(props)
     let __w = __wordsInMemory.w
       .filter(_ => _.filter == props.lessonName)
+      .slice(0,5)
       .map(_ => { _.isPressed = false; return { ..._ } });
 
     //console.log(__w)
     this.state = {
       wordsDone: []//__w//do not{
-      , wordsLeft: __w.map(_=>{return{word:_.word,id: _.id}})
+      , wordsLeft: __w.map(_=>{return{word:_.word,id: _.id,isPressed:_.isPressed}})
       , wordsRight: __w
        .slice()
-       //.sort(function (a, b) {
-      //   let g = 0.5 - Math.random();
-      //   return g > 0 ? 1 : g < 0 ? -1 : 0;
-      // })
+       .sort(function (a, b) {
+        let g = 0.5 - Math.random();
+        return g > 0 ? 1 : g < 0 ? -1 : 0;
+      })
       //(0.5 - Math.random())//
       , curRight: false
       , curLeft: false
@@ -62,7 +63,7 @@ export class Learn_LWordsAgainstLWords extends React.Component {
         curRight: IsWordTapped
       }
     })
-    this.clickOnWord(wordId)
+    this.clickOnWord()
   }
 
   /// copy code from behind
@@ -88,31 +89,34 @@ export class Learn_LWordsAgainstLWords extends React.Component {
       }
     })
     //! do not
-    let good = this.clickOnWord(wordId)
+    let good = this.clickOnWord()
     // if(!good)
     // {
 
     // }
   }
 
-  //prv
-  clickOnWord(wordId) {
-    return
+  clickOnWord() {
     this.setState(_prv => {
       if (_prv.curRight && _prv.curLeft) {
-        let ChoosedWordFromLeft = _prv.wordsLeft.findIndex(_ => _.id == wordId);
+        let ChoosedWordFromLeft = _prv.wordsLeft.find(_ => _.isPressed);
+        let ChoosedWordFromRight = _prv.wordsRight.find(_ => _.isPressed);
+        console.log(ChoosedWordFromLeft);console.log(ChoosedWordFromRight)
 
-        let ChoosedWordFromRight = _prv.wordsRight.findIndex(_ => _.isPressed);
-        if (ChoosedWordFromLeft == ChoosedWordFromRight) {
-          //return
-          //this.setState(prv => {
+        if (!(ChoosedWordFromLeft&&ChoosedWordFromRight))
+          return ;
+        else if(ChoosedWordFromLeft.id == ChoosedWordFromRight.id) {
+          let wordId=ChoosedWordFromLeft.id
+          /// wordsDone:
           let newWordsDone = _prv.wordsDone;
-          debugger;;
+          debugger;
           wordToPush = __wordsInMemory.w.find(_ => _.id == wordId);
           newWordsDone.push(wordToPush);
-          return { wordsDone: newWordsDone }
-          //})
-          //delete from right left
+          return {
+            wordsDone: newWordsDone,
+            wordsLeft: _prv.wordsLeft.filter(_=> _.id != wordId),
+            wordsRight: _prv.wordsRight.filter(_=> _.id != wordId)
+          }
         }
         else {
           alert("Вы выбрали неправильный перевод")

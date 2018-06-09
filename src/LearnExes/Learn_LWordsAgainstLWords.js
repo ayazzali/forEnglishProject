@@ -1,50 +1,15 @@
 import React, { Component } from 'react'
 import { TouchableOpacity, AsyncStorage, AppRegistry, TextInput, View, ScrollView, ListView, StyleSheet, TouchableHighlight, Button } from 'react-native'
 import { StackNavigator } from "react-navigation"
-import { CategoryFull } from './CategoryFull'
-import { Login } from './Login'
+import { CategoryFull } from "../CategoryFull"
+import { Login } from '../Login'
 // import { parse } from 'path';
-import { ExData, ExDataNamesWithHrefs } from './ParseCategories'
-import { CategoryButton } from './categ'
+import { ExData, ExDataNamesWithHrefs } from '../ParseCategories'
+import { CategoryButton } from '../categ'
 //todo_xls();
 import { Badge, Divider, FormInput, Text } from "react-native-elements"
-import { DB_actionNames, DB, __wordsInMemory } from './util'
+import { DB_actionNames, DB, __wordsInMemory } from '../util'
 import { RadioButton } from 'react-native-flexi-radio-button';
-
-export function wrapLearn_LWordsAgainstLWords() {
-  return (<Wrap__howManyLearn_LWordsAgainstLWords lessonName='знакомство' />)
-}
-
-/// дай мне тему урока - lessonName
-export class Wrap__howManyLearn_LWordsAgainstLWords extends React.Component {
-  /// state c-по
-  constructor(props) {
-    super(props);
-    this.state = {
-      curFirstWordId: 0,
-    }
-    this.__howMany = 3
-  }
-
-  render() {
-    const allWords = __wordsInMemory.w.filter(_ => _.filter == this.props.lessonName).slice(0, 9);
-    let words = allWords.slice(this.state.curFirstWordId, this.state.curFirstWordId + this.__howMany);
-    return (
-      <View>
-        {this.state.curFirstWordId == allWords.length ? <Text>первое задание окончено. Приходите завтра</Text> : null}
-        <Learn_LWordsAgainstLWords
-          words={words}
-          whenFinished={() => this.setState(prv => {
-            debugger;
-            if (prv.curFirstWordId == allWords.length) {
-              alert("Вы выполнили первое задание лессона: " + props.lessonName)
-            }
-            return { curFirstWordId: prv.curFirstWordId + this.__howMany }
-          })} />
-      </View>
-    )
-  }
-}
 
 /// дайте мне words
 export class Learn_LWordsAgainstLWords extends React.Component {

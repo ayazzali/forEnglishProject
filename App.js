@@ -10,6 +10,9 @@ import { CategoryButton } from './src/categ'
 import { MainTeacher } from './src/MainTeacher'
 import { TeacherStat } from './src/TeacherStat'
 import { TeacherAddCategory } from './src/TeacherAddCategory'
+import { ExSort } from './src/ExampleSort';
+// import { LearningAction } from './src/LearningAction';
+// import { WrapLearn_LWordsAgainstLWords } from './src/LearnExes/WrapLearn_LWordsAgainstLWords';
 //import * as U from './src/util'
 //todo_xls();
 
@@ -36,9 +39,18 @@ export default StackNavigator({
   _TeacherAddCategory: {
     screen: TeacherAddCategory
   },
+  ExSort: {
+    screen: ExSort
+  },
+  // _LearningAction: {
+  //   screen: LearningAction
+  // },
+  // _WrapLearn_LWordsAgainstLWords: {
+  //   screen: WrapLearn_LWordsAgainstLWords
+  // },
 },
   {
-    initialRouteName: "_Login" //todo techer ot student
+    initialRouteName: 'ExSort'//'_WrapLearn_LWordsAgainstLWords'//'_LearningAction'//"_Login" //todo techer ot student
   });
 
 function todo_xls() {

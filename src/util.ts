@@ -3,7 +3,7 @@ import { StackNavigator } from "react-navigation"
 const _REST = "http://192.168.43.252:3000"
     , _users = "users"
 
-export function RestFetch(route = 'posts/1/comments', action = "GET", bodyThatIWillStringify) {
+export function RestFetch(route = 'posts/1/comments', action = "GET", bodyThatIWillStringify: string) {
     console.log(route);
     return fetch(_REST + '/' + route, {
         headers: { 'Content-Type': 'application/json' },
@@ -31,7 +31,7 @@ export const DB = {
     usersCategories: 'usersCategories',
     categories: 'categories',
     users: 'users',
-    getWord: (wId) => __wordsInMemory.filter(f => f.id = +wId)[0],
+    getWord: (wId: number) => __wordsInMemory.w.filter(f => f.id = +wId)[0],
 
 }
 export const DB_actionNames = {
@@ -40,8 +40,24 @@ export const DB_actionNames = {
     Test_Written: 'testWritten'
 }
 
+export const randomizeList = () => 0.5 - Math.random();
+
+export const lJson = (v: any) => { console.log(JSON.stringify(v)); };
+export const l=lJson;
+export const lSimple = (v: any) => { console.log(v); };
+
+export interface typeWordsInMemory {
+    id: number
+    word: String
+    partofspeech: String
+    translation: String
+    filter: String
+    example?: String
+    percent?:number
+}
+
 export class __wordsInMemory {
-   static w = [
+    static w: Array<typeWordsInMemory> = [
         {
             "id": 1,
             "word": "a lot",
@@ -2637,5 +2653,5 @@ export class __wordsInMemory {
             "filter": "эмоции"
         }
     ]
-    
+
 }

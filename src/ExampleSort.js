@@ -12,7 +12,9 @@ import { __wordsInMemory } from './util'
 
 import { RadioGroup, RadioButton } from "react-native-flexi-radio-button"
 import CheckBox from 'react-native-check-box'
-import { WrapLearn_LWordsAgainstLWords, Wrap__howManyLearn_LWordsAgainstLWords } from './LearnExes/WrapLearn_LWordsAgainstLWords';
+import { WrapLearn_LWordsAgainstLWords, Wrap__howManyLearn_LWordsAgainstLWords, Wrap__howManyLearn_LWordsAgainstLWords2 } from './LearnExes/WrapLearn_LWordsAgainstLWords';
+import { LearningAction } from './LearnExes/LearningAction';
+import { WrapLearn_TestCards } from './LearnExes/Learn_TestCard';
 
 //import { Learn_LWordsAgainstLWords } from './LearnExes/Learn_LWordsAgainstLWords';
 
@@ -36,9 +38,11 @@ export class ExSort extends React.Component {
           {this.renderRadioPartOfSpeech()}
           {this.renderRadioFilter()}
           {this.renderRadio_LearnAction()}
-          {//<_ExSortedList {...filters} />
-          }
+          
           <ExSortButton {...filters} />
+          
+          <_ExSortedList {...filters} />
+          
         </ScrollView>
       </View>
     )
@@ -124,26 +128,27 @@ const Actions = [/// MOVE MOVE MOVE MOVE MOVE MOVE MOVEMOV MOVE MOVE MOVE MOVEM 
   }, {
     Name: 'wordsAgainstWords2',
     Description: 'Перемешать и найти правильные перевод-слово',
-    Component: null
+    Component: Wrap__howManyLearn_LWordsAgainstLWords2
   }, {
     Name: 'oneWord4Versions',
     Description: 'Слово и 4 варианта ответа',
-    Component: null
+    Component: WrapLearn_TestCards
   }, {
     Name: 'chooseWordInSentence',
     Description: 'Заполнить пропущенное слово в предложении',
     Component: null
   },
 ]
-/// words: filter partofspeech
+/// words: filter partofspeech]
 /// action
 export function ExSortButton(props) {
-  let filteredWords = __wordsInMemory.w
+  let filteredWords = __wordsInMemory.w.sort((a,b)=>a.percent>b.percent?b:a)
   if (props.filter)
     filteredWords = filteredWords.filter(w => w.filter.indexOf(props.filter) != -1)
   if (props.partofspeech)
     filteredWords = filteredWords.filter(w => w.partofspeech.indexOf(props.partofspeech) != -1)
-
+    ///**DO IT NORMAL!!!! */
+    //filteredWords=filteredWords.slice(0,3)
   // switch(props.action){
   //   case Actions.find(_=>_.Name)
   // }
@@ -160,19 +165,19 @@ export function ExSortButton(props) {
   )
 }
 
-export function ExSortedList(props) {
-  let filteredWords = __wordsInMemory.w
-  if (props.filter)
-    filteredWords = filteredWords.filter(w => w.filter.indexOf(props.filter) != -1)
-  if (props.partofspeech)
-    filteredWords = filteredWords.filter(w => w.partofspeech.indexOf(props.partofspeech) != -1)
+// export function ExSortedList(props) {
+//   let filteredWords = __wordsInMemory.w
+//   if (props.filter)
+//     filteredWords = filteredWords.filter(w => w.filter.indexOf(props.filter) != -1)
+//   if (props.partofspeech)
+//     filteredWords = filteredWords.filter(w => w.partofspeech.indexOf(props.partofspeech) != -1)
 
-  return (
-    <View>
-      {filteredWords.map(w => <WordRow key={w.id} word={w} />)}
-    </View>
-  )
-}
+//   return (
+//     <View>
+//       {filteredWords.map(w => <WordRow key={w.id} word={w} />)}
+//     </View>
+//   )
+// }
 
 
 const styles = StyleSheet.create({

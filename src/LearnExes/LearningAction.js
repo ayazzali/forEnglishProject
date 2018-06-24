@@ -2,14 +2,14 @@
 import React, { Component } from 'react'
 import { AsyncStorage, AppRegistry, TextInput, View, ScrollView, ListView, StyleSheet, TouchableHighlight, Button } from 'react-native'
 import { StackNavigator } from "react-navigation"
-import { CategoryFull } from './CategoryFull'
-import { Login } from './Login'
+import { CategoryFull } from '../CategoryFull'
+import { Login } from '../Login'
 // import { parse } from 'path';
-import { ExData, ExDataNamesWithHrefs } from './ParseCategories'
-import { CategoryButton } from './categ'
+import { ExData, ExDataNamesWithHrefs } from '../ParseCategories'
+import { CategoryButton } from '../categ'
 //todo_xls();
 import { Badge, Divider, FormInput, Text } from "react-native-elements"
-import { DB_actionNames, DB, __wordsInMemory } from './util'
+import { DB_actionNames, DB, __wordsInMemory } from '../util'
 
 
 export class LearningClass {
@@ -65,7 +65,7 @@ export class LearningClass {
   static first5tests = 0
   static sec5cards = 0
   static sec5tests = 0
-  static rnd = () =>   __wordsInMemory.w[ this.allLearnNowIds[(Math.random() * 10 ).toFixed()]]
+  static rnd = () =>   __wordsInMemory.w[ this.allLearnNowIds.sort(() => 0.5 - Math.random())]//[(Math.random() * 10 ).toFixed()]]
   static rnd4;
   static WhatWord_and_ActionNext() {
     let _w;
@@ -76,6 +76,7 @@ export class LearningClass {
       this.first5cards++
     }
     else if (this.first5tests != 5) {
+      debugger
       _w = __wordsInMemory.w[this.allLearnNowIds[this.first5tests]]//.min(w => w.percent)////////////////////////////first
       _w.action = DB_actionNames.Test_4
       _w.options = [this.rnd(), this.rnd(), this.rnd(), this.rnd()]

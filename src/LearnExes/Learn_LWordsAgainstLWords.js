@@ -12,14 +12,18 @@ import { DB_actionNames, DB, __wordsInMemory } from '../util'
 import { RadioButton } from 'react-native-flexi-radio-button';
 
 /// дайте мне words
-export class Learn_LWordsAgainstLWords extends React.Component {
+/// и с какой стороны англ слова: enToLeft
+ export class Learn_LWordsAgainstLWords extends React.Component {
   constructor(props) {
     super(props)
-    let __w = this.props.words.map(_ => { _.isPressed = false; return { ..._ } });
+    let __w = __wordsInMemory;
+    if( this.props.words)
+      __w = this.props.words.map(_ => { _.isPressed = false; return { ..._ } });
+    
     this.state = {
       wordsDone: []
-      //__w//do not{
-      , wordsLeft: __w.map(_ => { return { word: _.word, id: _.id, isPressed: _.isPressed } })
+      //__w//do not
+      , wordsLeft: __w.map(_ => { return { word: _.word,translation:_.translation, id: _.id, isPressed: _.isPressed } })
       , wordsRight: __w.sort(() => 0.5 - Math.random())
       , curRight: false
       , curLeft: false
@@ -138,7 +142,7 @@ export class Learn_LWordsAgainstLWords extends React.Component {
       <DottedWord
         key={_.id + 100}
         wordId={_.id}
-        word={_.word}
+        word={this.props.enToLeft? _.word:_.translation}
         isPressed={_.isPressed}
         clickedOnWord={this.clickOnWordLeft.bind(this)} />)
 
@@ -146,7 +150,7 @@ export class Learn_LWordsAgainstLWords extends React.Component {
       <DottedWord
         key={_.id}
         wordId={_.id}
-        word={_.translation}
+        word={this.props.enToLeft? _.translation:_.word}
         isPressed={_.isPressed}
         clickedOnWord={this.clickOnWordRight.bind(this)} />
     )

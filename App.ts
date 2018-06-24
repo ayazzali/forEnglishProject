@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { Component } from 'react';
 import { AsyncStorage, AppRegistry, TextInput, View, ScrollView, ListView, StyleSheet, Text, TouchableHighlight, Button } from 'react-native'
 import { StackNavigator } from "react-navigation"
 import { CategoryFull } from './src/CategoryFull'
@@ -11,6 +12,7 @@ import { MainTeacher } from './src/MainTeacher'
 import { TeacherStat } from './src/TeacherStat'
 import { TeacherAddCategory } from './src/TeacherAddCategory'
 import { ExSort } from './src/ExampleSort';
+import { TestLearn_TestCard } from './src/LearnExes/Learn_TestCard';
 // import { LearningAction } from './src/LearningAction';
 // import { WrapLearn_LWordsAgainstLWords } from './src/LearnExes/WrapLearn_LWordsAgainstLWords';
 //import * as U from './src/util'
@@ -42,6 +44,9 @@ export default StackNavigator({
   ExSort: {
     screen: ExSort
   },
+  DelTS:{
+    screen:TestLearn_TestCard
+  }
   // _LearningAction: {
   //   screen: LearningAction
   // },
@@ -50,7 +55,7 @@ export default StackNavigator({
   // },
 },
   {
-    initialRouteName: 'ExSort'//'_WrapLearn_LWordsAgainstLWords'//'_LearningAction'//"_Login" //todo techer ot student
+    initialRouteName: 'ExSort'//"DelTS"//'_WrapLearn_LWordsAgainstLWords'//'_LearningAction'//"_Login" //todo techer ot student
   });
 
 function todo_xls() {

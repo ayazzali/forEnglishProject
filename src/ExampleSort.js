@@ -165,19 +165,19 @@ export function ExSortButton(props) {
   )
 }
 
-// export function ExSortedList(props) {
-//   let filteredWords = __wordsInMemory.w
-//   if (props.filter)
-//     filteredWords = filteredWords.filter(w => w.filter.indexOf(props.filter) != -1)
-//   if (props.partofspeech)
-//     filteredWords = filteredWords.filter(w => w.partofspeech.indexOf(props.partofspeech) != -1)
+export function _ExSortedList(props) {
+  let filteredWords = __wordsInMemory.w
+  if (props.filter)
+    filteredWords = filteredWords.filter(w => w.filter.indexOf(props.filter) != -1)
+  if (props.partofspeech)
+    filteredWords = filteredWords.filter(w => w.partofspeech.indexOf(props.partofspeech) != -1)
 
-//   return (
-//     <View>
-//       {filteredWords.map(w => <WordRow key={w.id} word={w} />)}
-//     </View>
-//   )
-// }
+  return (
+    <View>
+      {filteredWords.map(w => <WordRow key={w.id} word={w} />)}
+    </View>
+  )
+}
 
 
 const styles = StyleSheet.create({

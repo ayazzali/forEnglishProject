@@ -49,7 +49,7 @@ export function WordRow(props) {
     q.push(props.word[key])
   }
   //debugger;
-  q = q.map(p => <Text key={p}> {p}</Text>)
+  q = q.map((p,indx) => <Text key={indx}> {p}</Text>)
 
   // <Text> {props.Word}</Text>
   // <Text> {props.Translate}</Text>

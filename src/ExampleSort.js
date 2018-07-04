@@ -15,6 +15,7 @@ import CheckBox from 'react-native-check-box'
 import { WrapLearn_LWordsAgainstLWords, Wrap__howManyLearn_LWordsAgainstLWords, Wrap__howManyLearn_LWordsAgainstLWords2 } from './LearnExes/WrapLearn_LWordsAgainstLWords';
 import { LearningAction } from './LearnExes/LearningAction';
 import { WrapLearn_TestCards } from './LearnExes/Learn_TestCard';
+import { Wrap2Learn_ChooseWordInSentence } from './LearnExes/Learn_WordInSentenseByMeaning';
 
 //import { Learn_LWordsAgainstLWords } from './LearnExes/Learn_LWordsAgainstLWords';
 
@@ -22,7 +23,7 @@ export class ExSort extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      filter: 'транспорт',
+      filter: 'знакомство',
       partofspeech: '',
       action: ''
     }
@@ -77,8 +78,7 @@ export class ExSort extends React.Component {
     var ar = __wordsInMemory.w
       .map(w => w.filter)
       .filter((value, index, self) => self.indexOf(value) === index)
-
-    ar = ar.map(filter =>
+    ar = ar.map((filter) =>
       <RadioButton key={filter} value={filter}>
         <Text>{filter}</Text>
       </RadioButton>
@@ -90,7 +90,7 @@ export class ExSort extends React.Component {
         <RadioGroup
           onSelect={(index, value) => this.setState({ filter: value })
           }>
-          <RadioButton value={''}>
+          <RadioButton key={''} value={''}>
             <Text>не фильтровать</Text>
           </RadioButton>
           {ar}
@@ -136,12 +136,13 @@ const Actions = [/// MOVE MOVE MOVE MOVE MOVE MOVE MOVEMOV MOVE MOVE MOVE MOVEM 
   }, {
     Name: 'chooseWordInSentence',
     Description: 'Заполнить пропущенное слово в предложении',
-    Component: null
+    Component: Wrap2Learn_ChooseWordInSentence
   },
 ]
 /// words: filter partofspeech]
 /// action
 export function ExSortButton(props) {
+  
   let filteredWords = __wordsInMemory.w.sort((a,b)=>a.percent>b.percent?b:a)
   if (props.filter)
     filteredWords = filteredWords.filter(w => w.filter.indexOf(props.filter) != -1)
@@ -167,6 +168,7 @@ export function ExSortButton(props) {
 
 export function _ExSortedList(props) {
   let filteredWords = __wordsInMemory.w
+  
   if (props.filter)
     filteredWords = filteredWords.filter(w => w.filter.indexOf(props.filter) != -1)
   if (props.partofspeech)

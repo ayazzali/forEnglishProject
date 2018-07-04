@@ -48,7 +48,7 @@ export const lSimple = (v: any) => { console.log(v); };
 
 export interface typeWordsInMemory {
     id: number
-    word: String
+    word: string
     partofspeech: String
     translation: String
     filter: String

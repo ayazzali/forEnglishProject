@@ -13,6 +13,7 @@ import { TeacherStat } from './src/TeacherStat'
 import { TeacherAddCategory } from './src/TeacherAddCategory'
 import { ExSort } from './src/ExampleSort';
 import { TestLearn_TestCard } from './src/LearnExes/Learn_TestCard';
+import { TestLearn_ChooseWordInSentence } from './src/LearnExes/Learn_WordInSentenseByMeaning';
 // import { LearningAction } from './src/LearningAction';
 // import { WrapLearn_LWordsAgainstLWords } from './src/LearnExes/WrapLearn_LWordsAgainstLWords';
 //import * as U from './src/util'
@@ -44,8 +45,11 @@ export default StackNavigator({
   ExSort: {
     screen: ExSort
   },
-  DelTS:{
+  Test__TestLearn_TestCard:{
     screen:TestLearn_TestCard
+  },
+  Test__ChooseWordInSentence:{
+    screen:TestLearn_ChooseWordInSentence
   }
   // _LearningAction: {
   //   screen: LearningAction
@@ -55,7 +59,7 @@ export default StackNavigator({
   // },
 },
   {
-    initialRouteName: 'ExSort'//"DelTS"//'_WrapLearn_LWordsAgainstLWords'//'_LearningAction'//"_Login" //todo techer ot student
+    initialRouteName: 'ExSort'//'Test__ChooseWordInSentence'//"DelTS"//'_WrapLearn_LWordsAgainstLWords'//'_LearningAction'//"_Login" //todo techer ot student
   });
 
 function todo_xls() {

@@ -79,26 +79,34 @@ interface typeProps_CWIS {
     whatToDoAfter?: () => void
 }
 interface typeState_CWIS {
-    current: number,
+    current: number
     badRemeberedWordCount: Array<number>
+    nowWeShowingQuestion: boolean
 }
 
-
-export function Wrap2Learn_ChooseWordInSentence(props:typeProps_CWIS){
-    let p={...props,words:props.words.filter(_ => _.example != undefined).slice()}  
+/**
+ * прокидывает props - words где есть *example*
+ * и всё
+ * @param props 
+ */
+export function Wrap2Learn_ChooseWordInSentence(props: typeProps_CWIS) {
+    let p = { ...props, words: props.words.filter(_ => _.example != undefined).slice() }
     return (
-        <WrapLearn_ChooseWordInSentence {...p}/> )}
+        <WrapLearn_ChooseWordInSentence {...p} />)
+}
 /** 
  * ~~всё как Learn_TestCard~~
  * рисую предложения для всех слов 
  * - варианты слов беру из этих же слов
+ * ### убрать русское предложение! из задания
  */
 class WrapLearn_ChooseWordInSentence extends React.Component<typeProps_CWIS, typeState_CWIS>{
     constructor(p: typeProps_CWIS) {
         super(p);
         this.state = {
             current: 0,
-            badRemeberedWordCount: []
+            badRemeberedWordCount: [],
+            nowWeShowingQuestion: false
         }
     }
     IsHeRepeatingBadWords(): boolean {
@@ -129,29 +137,38 @@ class WrapLearn_ChooseWordInSentence extends React.Component<typeProps_CWIS, typ
         //wList.push(word)
         // done wList
         return (
-            <Learn_ChooseWordInSentence words3={wList} word={word} whatToDoAfter={(IRememberThisWord) =>
-                this.setState(prv => {
-                    var toSetState = {
-                        current: prv.current + 1,
-                        badRemeberedWordCount: prv.badRemeberedWordCount //nothing means
-                    }
-                    if (IRememberThisWord) {
-                        if (this.IsHeRepeatingBadWords())
-                            toSetState.badRemeberedWordCount.splice(0)//удаляем то слово которое повторяли
-                        else
-                            __wordsInMemory.w = __wordsInMemory.w.map(_ => {
-                                if (_.id == prv.current)
-                                    _.percent = _.percent ? _.percent + 0.3 : 0.3;
-                                return _
-                            })
-                    }
-                    else {
-                        if (!this.IsHeRepeatingBadWords())
-                            toSetState.badRemeberedWordCount = prv.badRemeberedWordCount.concat([prv.current,])
-                    }
+            <View>
+                <Learn_ChooseWordInSentence
+                    words3={wList}
+                    word={word}
+                    whatToDoAfter={(IRememberThisWord) =>
+                        this.setState(prv => {
+                            var toSetState = {
+                                current: prv.current + 1,
+                                badRemeberedWordCount: prv.badRemeberedWordCount //nothing means
+                            }
+                            if (IRememberThisWord) {
+                                if (this.IsHeRepeatingBadWords())
+                                    toSetState.badRemeberedWordCount.splice(0)//удаляем то слово которое повторяли
+                                else
+                                    __wordsInMemory.w = __wordsInMemory.w.map(_ => {
+                                        if (_.id == prv.current)
+                                            _.percent = _.percent ? _.percent + 0.3 : 0.3;
+                                        return _
+                                    })
+                            }
+                            else {
+                                if (!this.IsHeRepeatingBadWords())
+                                    toSetState.badRemeberedWordCount = prv.badRemeberedWordCount.concat([prv.current,])
+                            }
 
-                    return toSetState
-                })} />
+                            return toSetState
+                        })} />
+                {this.state.nowWeShowingQuestion
+                    && <View style={{ width: 100, height: 130, backgroundColor: 'orange' }}>
+                        here is question ^)
+                        </View>}
+            </View>
         )
     }
 }
